@@ -43,6 +43,10 @@ INSTALLED_APPS = [
     # Third-party
     "allauth",
     "allauth.account",
+    "allauth.socialaccount",
+    # local apps
+    "accounts",
+    "chatbots",
 ]
 
 MIDDLEWARE = [
@@ -141,7 +145,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # django-allauth config
 SITE_ID = 1
-LOGIN_REDIRECT_URL = "home"
+LOGIN_REDIRECT_URL = "chats"
 ACCOUNT_LOGOUT_REDIRECT = "home"
 
 AUTHENTICATION_BACKENDS = (
@@ -153,6 +157,7 @@ ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = "email"
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 
 
 # Email configuration

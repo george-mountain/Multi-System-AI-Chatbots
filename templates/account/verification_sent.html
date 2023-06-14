@@ -1,0 +1,39 @@
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% load i18n %}
+{% load account %}
+{% block content %}
+
+<div class="tyn-content tyn-auth tyn-auth-centered">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-6 col-lg-7 col-md-8 col-sm-10">
+                {% include 'includes/logo_body.html' %}
+                <div class="card border-0">
+                    <div class="p-4">
+                        <h3>Verify Your E-mail Address</h3>
+                        <div class="row g-4">
+                            <div class="col-12">
+
+
+                                <p> We have sent an e-mail to you for verification. Follow the link provided to finalize the signup process.</p>
+
+                            <form action="{% url 'account_email' %}" class="email_list" method="post">
+                                {% csrf_token %}
+                            </div><!-- .col -->
+                            <div class="col-12">
+                                <button class="secondaryAction btn btn-primary w-100" type="submit" name="action_send" >{% trans 'Re-send Verification' %}</button>
+                            </div><!-- .col -->
+                        </form>
+                        </div><!-- .row -->
+                    </div>
+                </div><!-- .card -->
+
+            </div><!-- .col -->
+        </div><!-- .row -->
+    </div><!-- .container -->
+</div>
+
+{% endblock %}
