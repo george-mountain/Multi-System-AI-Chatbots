@@ -1,7 +1,60 @@
 {% extends 'base.html' %}
 {% load static %}
 
+
+
 {% block content %}
+
+<style>
+
+    .copy-button,
+    .regenerate-button {
+    background-color: #fff; /* Button background color */
+    color: #000; /* Button text color */
+    border: 1px solid #000; /* Button border */
+    border-radius: 4px; /* Button border radius */
+    padding: 2px 8px; /* Button padding */
+    font-size: 12px; /* Button font size */
+    cursor: pointer; /* Cursor style on hover */
+    transition: background-color 0.3s, color 0.3s; /* Transition effect for hover */
+    width: 65px; /* Set the desired width */
+    height: 45px; /* Set the desired height */
+    margin-top: 4px;
+    }
+
+    .copy-button:hover,
+    .regenerate-button:hover {
+    background-color: #000; /* Button background color on hover */
+    color: #fff; /* Button text color on hover */
+    }
+
+    @keyframes blinking {
+        0% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+
+      .blinking {
+        animation: blinking 1s infinite;
+      }
+
+      .wait-text {
+        visibility: hidden;
+      }
+
+      .blinking .wait-text {
+        visibility: visible;
+      }
+
+
+
+</style>
 
 {% include 'includes/sidebar.html' %}
 <div class="tyn-main" id="tynMain">
@@ -17,20 +70,29 @@
     </ul>
     <div class="tyn-chat-body my-4 px-4" data-simplebar>
         <div class="container px-0">
+            {% for chat in chats %}
+                    {% if chat.user == request.user %}
             <div class="tyn-qa tyn-qa-bubbly">
                 <div class="tyn-qa-item">
                     <div class="tyn-qa-avatar">
                         <div class="tyn-media tyn-size-md">
-                            <img src="images/avatar/1.jpg" alt="">
+                            {% if request.user.profile.profile_picture %}
+                                <img src="{{ request.user.profile.profile_picture.url }}">
+                            {% else %}
+                                <img src="{% static 'images/avatar/1.jpg' %}" alt="">
+                            {% endif %}
+
                         </div>
                     </div>
-                    <div class="tyn-qa-message tyn-text-block"> what can you do for me ? </div><!-- .tyn-qa-message -->
+                    <div class="tyn-qa-message tyn-text-block"> {{chat.message}} </div><!-- .tyn-qa-message -->
                 </div><!-- .tyn-qa-item -->
+
+                <!-- AI bot response -->
                 <div class="tyn-qa-item">
                     <div class="tyn-qa-avatar">
                         <div class="tyn-qa-avatar-wrap">
                             <div class="tyn-media tyn-size-md">
-                                <img src="images/avatar/bot-1.jpg" alt="">
+                                <img src="{% static 'images/avatar/bot-1.jpg' %}" alt="">
                             </div>
                             <ul class="d-flex flex-column mt-2">
                                 <li>
@@ -53,234 +115,248 @@
                         </div>
                     </div>
                     <div class="tyn-qa-message tyn-text-block">
-                        <p>As an AI language model, I can help you in a variety of ways. Here are some examples:</p>
-                        <ol>
-                            <li>Answer questions: I can answer your questions about a wide range of topics, including science, history, geography, math, and more.</li>
-                            <li>Provide information: I can provide you with information on a particular topic, such as the definition of a word, the history of an event, or the current status of a situation.</li>
-                            <li>Generate text: I can generate text for you, such as an essay, a report, or a summary of a particular topic.</li>
-                            <li>Help with language: If English is not your first language, I can help you improve your writing or speaking skills by suggesting ways to improve your grammar, syntax, and vocabulary.</li>
-                            <li>Assist with research: If you're working on a research project, I can help you find relevant information and sources to support your work.</li>
-                            <li>Engage in conversation: I can engage in conversation with you on a variety of topics and help you explore different ideas and perspectives.</li>
-                        </ol>
-                        <p>Overall, my goal is to assist you in any way that I can using my knowledge and abilities as an AI language model.</p>
+                        {{chat.response}}
                     </div><!-- .tyn-qa-message -->
                 </div><!-- .tyn-qa-item -->
-                <div class="tyn-qa-item">
-                    <div class="tyn-qa-avatar">
-                        <div class="tyn-media tyn-size-md">
-                            <img src="images/avatar/1.jpg" alt="">
-                        </div>
-                    </div>
-                    <div class="tyn-qa-message tyn-text-block"> ok, write me short joke for web development tutorial starting. </div><!-- .tyn-qa-message -->
-                </div><!-- .tyn-qa-item -->
-                <div class="tyn-qa-item">
-                    <div class="tyn-qa-avatar">
-                        <div class="tyn-qa-avatar-wrap">
-                            <div class="tyn-media tyn-size-md">
-                                <img src="images/avatar/bot-1.jpg" alt="">
-                            </div>
-                            <ul class="d-flex flex-column mt-2">
-                                <li>
-                                    <button class="btn btn-icon btn-md btn-pill btn-transparent">
-                                        <!-- hand-thumbs-up-fill -->
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-hand-thumbs-up-fill" viewBox="0 0 16 16">
-                                            <path d="M6.956 1.745C7.021.81 7.908.087 8.864.325l.261.066c.463.116.874.456 1.012.965.22.816.533 2.511.062 4.51a9.84 9.84 0 0 1 .443-.051c.713-.065 1.669-.072 2.516.21.518.173.994.681 1.2 1.273.184.532.16 1.162-.234 1.733.058.119.103.242.138.363.077.27.113.567.113.856 0 .289-.036.586-.113.856-.039.135-.09.273-.16.404.169.387.107.819-.003 1.148a3.163 3.163 0 0 1-.488.901c.054.152.076.312.076.465 0 .305-.089.625-.253.912C13.1 15.522 12.437 16 11.5 16H8c-.605 0-1.07-.081-1.466-.218a4.82 4.82 0 0 1-.97-.484l-.048-.03c-.504-.307-.999-.609-2.068-.722C2.682 14.464 2 13.846 2 13V9c0-.85.685-1.432 1.357-1.615.849-.232 1.574-.787 2.132-1.41.56-.627.914-1.28 1.039-1.639.199-.575.356-1.539.428-2.59z" />
-                                        </svg>
-                                    </button>
-                                </li>
-                                <li>
-                                    <button class="btn btn-icon btn-md btn-pill btn-transparent">
-                                        <!-- hand-thumbs-down -->
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-hand-thumbs-down" viewBox="0 0 16 16">
-                                            <path d="M8.864 15.674c-.956.24-1.843-.484-1.908-1.42-.072-1.05-.23-2.015-.428-2.59-.125-.36-.479-1.012-1.04-1.638-.557-.624-1.282-1.179-2.131-1.41C2.685 8.432 2 7.85 2 7V3c0-.845.682-1.464 1.448-1.546 1.07-.113 1.564-.415 2.068-.723l.048-.029c.272-.166.578-.349.97-.484C6.931.08 7.395 0 8 0h3.5c.937 0 1.599.478 1.934 1.064.164.287.254.607.254.913 0 .152-.023.312-.077.464.201.262.38.577.488.9.11.33.172.762.004 1.15.069.13.12.268.159.403.077.27.113.567.113.856 0 .289-.036.586-.113.856-.035.12-.08.244-.138.363.394.571.418 1.2.234 1.733-.206.592-.682 1.1-1.2 1.272-.847.283-1.803.276-2.516.211a9.877 9.877 0 0 1-.443-.05 9.364 9.364 0 0 1-.062 4.51c-.138.508-.55.848-1.012.964l-.261.065zM11.5 1H8c-.51 0-.863.068-1.14.163-.281.097-.506.229-.776.393l-.04.025c-.555.338-1.198.73-2.49.868-.333.035-.554.29-.554.55V7c0 .255.226.543.62.65 1.095.3 1.977.997 2.614 1.709.635.71 1.064 1.475 1.238 1.977.243.7.407 1.768.482 2.85.025.362.36.595.667.518l.262-.065c.16-.04.258-.144.288-.255a8.34 8.34 0 0 0-.145-4.726.5.5 0 0 1 .595-.643h.003l.014.004.058.013a8.912 8.912 0 0 0 1.036.157c.663.06 1.457.054 2.11-.163.175-.059.45-.301.57-.651.107-.308.087-.67-.266-1.021L12.793 7l.353-.354c.043-.042.105-.14.154-.315.048-.167.075-.37.075-.581 0-.211-.027-.414-.075-.581-.05-.174-.111-.273-.154-.315l-.353-.354.353-.354c.047-.047.109-.176.005-.488a2.224 2.224 0 0 0-.505-.804l-.353-.354.353-.354c.006-.005.041-.05.041-.17a.866.866 0 0 0-.121-.415C12.4 1.272 12.063 1 11.5 1z" />
-                                        </svg>
-                                    </button>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="tyn-qa-message tyn-text-block">
-                        <p>Sure, here's a short joke for a web development tutorial starting:</p>
-                        <p>Why was the web developer always cold? <br> Because he left his Windows open!</p>
-                    </div><!-- .tyn-qa-message -->
-                </div><!-- .tyn-qa-item -->
-                <div class="tyn-qa-item">
-                    <div class="tyn-qa-avatar">
-                        <div class="tyn-media tyn-size-md">
-                            <img src="images/avatar/1.jpg" alt="">
-                        </div>
-                    </div>
-                    <div class="tyn-qa-message tyn-text-block"> Could you write a basic chapter 1 tutorial for JavaScript for me ? </div><!-- .tyn-qa-message -->
-                </div><!-- .tyn-qa-item -->
-                <div class="tyn-qa-item">
-                    <div class="tyn-qa-avatar">
-                        <div class="tyn-qa-avatar-wrap">
-                            <div class="tyn-media tyn-size-md">
-                                <img src="images/avatar/bot-1.jpg" alt="">
-                            </div>
-                            <ul class="d-flex flex-column mt-2">
-                                <li>
-                                    <button class="btn btn-icon btn-md btn-pill btn-transparent">
-                                        <!-- hand-thumbs-up-fill -->
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-hand-thumbs-up-fill" viewBox="0 0 16 16">
-                                            <path d="M6.956 1.745C7.021.81 7.908.087 8.864.325l.261.066c.463.116.874.456 1.012.965.22.816.533 2.511.062 4.51a9.84 9.84 0 0 1 .443-.051c.713-.065 1.669-.072 2.516.21.518.173.994.681 1.2 1.273.184.532.16 1.162-.234 1.733.058.119.103.242.138.363.077.27.113.567.113.856 0 .289-.036.586-.113.856-.039.135-.09.273-.16.404.169.387.107.819-.003 1.148a3.163 3.163 0 0 1-.488.901c.054.152.076.312.076.465 0 .305-.089.625-.253.912C13.1 15.522 12.437 16 11.5 16H8c-.605 0-1.07-.081-1.466-.218a4.82 4.82 0 0 1-.97-.484l-.048-.03c-.504-.307-.999-.609-2.068-.722C2.682 14.464 2 13.846 2 13V9c0-.85.685-1.432 1.357-1.615.849-.232 1.574-.787 2.132-1.41.56-.627.914-1.28 1.039-1.639.199-.575.356-1.539.428-2.59z" />
-                                        </svg>
-                                    </button>
-                                </li>
-                                <li>
-                                    <button class="btn btn-icon btn-md btn-pill btn-transparent">
-                                        <!-- hand-thumbs-down -->
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-hand-thumbs-down" viewBox="0 0 16 16">
-                                            <path d="M8.864 15.674c-.956.24-1.843-.484-1.908-1.42-.072-1.05-.23-2.015-.428-2.59-.125-.36-.479-1.012-1.04-1.638-.557-.624-1.282-1.179-2.131-1.41C2.685 8.432 2 7.85 2 7V3c0-.845.682-1.464 1.448-1.546 1.07-.113 1.564-.415 2.068-.723l.048-.029c.272-.166.578-.349.97-.484C6.931.08 7.395 0 8 0h3.5c.937 0 1.599.478 1.934 1.064.164.287.254.607.254.913 0 .152-.023.312-.077.464.201.262.38.577.488.9.11.33.172.762.004 1.15.069.13.12.268.159.403.077.27.113.567.113.856 0 .289-.036.586-.113.856-.035.12-.08.244-.138.363.394.571.418 1.2.234 1.733-.206.592-.682 1.1-1.2 1.272-.847.283-1.803.276-2.516.211a9.877 9.877 0 0 1-.443-.05 9.364 9.364 0 0 1-.062 4.51c-.138.508-.55.848-1.012.964l-.261.065zM11.5 1H8c-.51 0-.863.068-1.14.163-.281.097-.506.229-.776.393l-.04.025c-.555.338-1.198.73-2.49.868-.333.035-.554.29-.554.55V7c0 .255.226.543.62.65 1.095.3 1.977.997 2.614 1.709.635.71 1.064 1.475 1.238 1.977.243.7.407 1.768.482 2.85.025.362.36.595.667.518l.262-.065c.16-.04.258-.144.288-.255a8.34 8.34 0 0 0-.145-4.726.5.5 0 0 1 .595-.643h.003l.014.004.058.013a8.912 8.912 0 0 0 1.036.157c.663.06 1.457.054 2.11-.163.175-.059.45-.301.57-.651.107-.308.087-.67-.266-1.021L12.793 7l.353-.354c.043-.042.105-.14.154-.315.048-.167.075-.37.075-.581 0-.211-.027-.414-.075-.581-.05-.174-.111-.273-.154-.315l-.353-.354.353-.354c.047-.047.109-.176.005-.488a2.224 2.224 0 0 0-.505-.804l-.353-.354.353-.354c.006-.005.041-.05.041-.17a.866.866 0 0 0-.121-.415C12.4 1.272 12.063 1 11.5 1z" />
-                                        </svg>
-                                    </button>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="tyn-qa-message tyn-text-block">
-                        <p>Chapter 1: Getting Started with JavaScript and CSS</p>
-                        <p>JavaScript and CSS are two essential technologies for building modern web applications. In this chapter, we will cover the basics of JavaScript and CSS, including data types, variables, and control structures, as well as an example of how to use JavaScript and CSS together.</p>
-                        <p>1.1 Data Types</p>
-                        <p>JavaScript supports several data types, including numbers, strings, booleans, null, and undefined. Here are some examples:</p>
-                        <ul>
-                            <li>Numbers: 42, 3.14, -7</li>
-                            <li>Strings: "hello", 'world', "123"</li>
-                            <li>Booleans: true, false</li>
-                            <li>Null: null</li>
-                            <li>Undefined: undefined</li>
-                        </ul>
-                        <p>To declare a variable in JavaScript, you can use the "var" keyword, followed by the variable name and an optional initial value. Here's an example:</p>
-                        <div class="tyn-code-block">
-                            <h6 class="tyn-code-block-title tyn-overline">Javascript</h6>
-                            <button data-clipboard-target="#js-tuts-01" class="tyn-copy">Copy</button>
-                            <pre><code class="language-js" id="js-tuts-01">var myNumber = 42;
-var myString = "hello";
-var myBoolean = true;
-var myNull = null;
-var myUndefined = undefined;
-</code></pre>
-                        </div>
-                        <p>1.2 Operators</p>
-                        <p>JavaScript supports several operators for performing arithmetic, comparison, and logical operations. Here are some examples:</p>
-                        <ul>
-                            <li>Arithmetic operators: +, -, *, /, %</li>
-                            <li>Comparison operators: ==, !=, ===, !==, <,>, <=,>=</li>
-                            <li>Logical operators: &&, ||, !</li>
-                        </ul>
-                        <div class="tyn-code-block">
-                            <h6 class="tyn-code-block-title tyn-overline">Javascript</h6>
-                            <button data-clipboard-target="#js-tuts-02" class="tyn-copy">Copy</button>
-                            <pre><code class="language-js" id="js-tuts-02">var x = 10;
-var y = 5;
-var z = x + y; // 15
-var a = x > y; // true
-var b = x == y; // false
-var c = !b; // true
-</code></pre>
-                        </div>
-                        <p>1.3 Control Structures</p>
-                        <p>JavaScript supports several control structures for controlling the flow of your program. These include if/else statements, loops, and switch statements. Here are some examples:</p>
-                        <ul>
-                            <li>If/else statements:</li>
-                        </ul>
-                        <div class="tyn-code-block">
-                            <h6 class="tyn-code-block-title tyn-overline">Javascript</h6>
-                            <button data-clipboard-target="#js-tuts-03" class="tyn-copy">Copy</button>
-                            <pre><code class="language-js" id="js-tuts-03">var age = 18;
-if (age >= 18) {
-console.log("You are an adult.");
-} else {
-console.log("You are a minor.");
-}
-</code></pre>
-                        </div>
-                        <ul>
-                            <li>Loops:</li>
-                        </ul>
-                        <div class="tyn-code-block">
-                            <h6 class="tyn-code-block-title tyn-overline">Javascript</h6>
-                            <button data-clipboard-target="#js-tuts-04" class="tyn-copy">Copy</button>
-                            <pre><code class="language-js" id="js-tuts-04">for (var i = 0; i < 10; i++) {
-console.log(i);
-}
-</code></pre>
-                        </div>
-                        <ul>
-                            <li>Switch statements:</li>
-                        </ul>
-                        <div class="tyn-code-block">
-                            <h6 class="tyn-code-block-title tyn-overline">Javascript</h6>
-                            <button data-clipboard-target="#js-tuts-05" class="tyn-copy">Copy</button>
-                            <pre><code class="language-js" id="js-tuts-05">var fruit = "banana";
-switch (fruit) {
-case "apple":
-console.log("This is an apple.");
-break;
-case "banana":
-console.log("This is a banana.");
-break;
-default:
-console.log("I don't know what fruit this is.");
-}
-</code></pre>
-                        </div>
-                        <p>1.4 Example: Changing CSS with JavaScript</p>
-                        <p>One useful application of JavaScript is to dynamically modify the CSS of a webpage. Here's an example of how to use JavaScript to change the color of a paragraph element when a button is clicked:</p>
-                        <div class="tyn-code-block">
-                            <h6 class="tyn-code-block-title tyn-overline">HTML</h6>
-                            <button data-clipboard-target="#js-tuts-06" class="tyn-copy">Copy</button>
-                            <pre><code class="language-html" id="js-tuts-06">&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-&lt;head&gt;
-&lt;style&gt;
-p {
-color: blue;
-}
-&lt;/style&gt;
-&lt;/head&gt;
-&lt;body&gt;
 
-&lt;p id=&quot;myParagraph&quot;&gt;This is a paragraph.&lt;/p&gt;
 
-&lt;button onclick=&quot;changeColor()&quot;&gt;Change Color&lt;/button&gt;
-
-&lt;script&gt;
-function changeColor() {
-var paragraph = document.getElementById(&quot;myParagraph&quot;);
-paragraph.style.color = &quot;red&quot;;
-}
-&lt;/script&gt;
-
-&lt;/body&gt;
-&lt;/html&gt;</code></pre>
-                        </div>
-                        <p>In this example, we use JavaScript to find the paragraph element with the ID "myParagraph" and change its color to red when the button is clicked. We do this by setting the "color" property of the paragraph's style object.</p>
-                        <p>In this chapter, we covered the basics of JavaScript and CSS, including data types, variables, operators, and control structures, as well as an example of how to use JavaScript and CSS</p>
-                    </div><!-- .tyn-qa-message -->
-                </div><!-- .tyn-qa-item -->
             </div><!-- .tyn-qa -->
+            {% endif %}
+        {% endfor %}
         </div>
     </div><!-- .tyn-chat-body -->
+
     <div class="tyn-chat-form border-0 px-4">
         <div class="container px-0">
             <div class="ps-3 pe-4 py-3 bg-white mb-4 rounded-3">
-                <div class="tyn-chat-form-enter">
-                    <div class="tyn-chat-form-input" id="tynChatInput" placeholder="text" contenteditable></div>
-                    <ul class="tyn-list-inline me-n2 my-1">
-                        <li><button class="btn btn-icon btn-white btn-md btn-pill">
-                                <!-- send-fill -->
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send-fill" viewBox="0 0 16 16">
-                                    <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 3.178 4.995.002.002.26.41a.5.5 0 0 0 .886-.083l6-15Zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471-.47 1.178Z" />
-                                </svg>
-                            </button></li>
-                    </ul>
-                </div>
+                <form class="message-form">
+                    {%csrf_token%}
+                    <div class="tyn-chat-form-enter">
+                        <!-- <input class="tyn-chat-form-input" id="tynChatInput" placeholder="text" type="text"> -->
+                        <textarea class="tyn-chat-form-input" id="tynChatInput" placeholder="Type your questions here..."></textarea>
+                        <ul class="tyn-list-inline me-n2 my-1">
+                            <li>
+                                <button class="btn btn-icon btn-white btn-lg btn-pill" type="submit">
+                                    <!-- send-fill -->
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send-fill" viewBox="0 0 16 16">
+                                        <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 3.178 4.995.002.002.26.41a.5.5 0 0 0 .886-.083l6-15Zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471-.47 1.178Z" />
+                                    </svg>
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
             </div>
         </div>
     </div><!-- .tyn-chat-form -->
+
+
+
 </div><!-- .tyn-chat-content -->
 </div>
 </div>
+
+<!-- cHAT scripts -->
+<script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.querySelector(".message-form");
+        const input = document.querySelector("#tynChatInput");
+        const chatBody = document.querySelector(".tyn-chat-body");
+        let messageId = 0; // Track unique IDs for chat messages
+
+        form.addEventListener("submit", function (event) {
+            event.preventDefault();
+            const message = input.value.trim();
+            if (message !== "") {
+                const id = "message-" + messageId++;
+                addChatToBody(message, true, id); // Display user input immediately
+                input.value = "";
+                input.classList.add("blinking");
+                input.value = "wait..."; // Set the "wait..." text in the input field
+                input.disabled = true; // Disable the input field during response generation
+                sendMessage(message, id);
+            }
+        });
+
+        form.addEventListener("keydown", function (event) {
+            if (event.key === "Enter" && !event.shiftKey) {
+                event.preventDefault();
+                form.dispatchEvent(new Event("submit"));
+            }
+        });
+
+        function sendMessage(message, id) {
+            const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", "/apps/", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        try {
+                            const response = JSON.parse(xhr.responseText);
+                            if (response.error) {
+                                addChatToBody(response.error, false, id); // Display the error message
+                            } else {
+                                addChatToBody(response.response, false, id); // Display bot response
+                            }
+                        } catch (error) {
+                            const errorResponse = "An error occurred. Please try reducing your input message size and try again later.";
+                            addChatToBody(errorResponse, false, id); // Display the generic error message
+                        }
+                    } else {
+                        const errorResponse = "An error occurred. Please try reducing your input message size and try again later.";
+                        addChatToBody(errorResponse, false, id); // Display the generic error message
+                    }
+                    enableRegenerateButton(id); // Enable the regenerate button
+                    input.classList.remove("blinking");
+                    input.value = ""; // Clear the input field
+                    input.disabled = false; // Enable the input field
+                    input.focus(); // Set focus back to the input field
+                    scrollToBottom();
+                }
+            };
+            const data = "message=" + encodeURIComponent(message);
+            xhr.send(data);
+        }
+
+
+        function addChatToBody(message, isUser, id) {
+            const chatItem = document.createElement("div");
+            chatItem.classList.add("tyn-qa", "tyn-qa-bubbly");
+
+            const chatMessage = document.createElement("div");
+            chatMessage.classList.add("tyn-qa-item");
+            chatMessage.setAttribute("data-message-id", id); // Set custom attribute for message ID
+
+            const avatar = document.createElement("div");
+            avatar.classList.add("tyn-qa-avatar");
+
+            const avatarWrap = document.createElement("div");
+            avatarWrap.classList.add("tyn-qa-avatar-wrap");
+
+            const avatarImage = document.createElement("div");
+            avatarImage.classList.add("tyn-media", "tyn-size-md");
+
+            const image = document.createElement("img");
+            if (isUser) {
+                // Check if user has a profile picture
+                const userProfilePicture = "{% if request.user.profile.profile_picture %}{{ request.user.profile.profile_picture.url }}{% else %}{% static 'images/avatar/1.jpg' %}{% endif %}";
+                image.src = userProfilePicture;
+            } else {
+                image.src = "{% static 'images/avatar/bot-1.jpg' %}"; // Chatbot image
+            }
+            image.alt = "";
+
+            avatarImage.appendChild(image);
+            avatarWrap.appendChild(avatarImage);
+            avatar.appendChild(avatarWrap);
+
+            const messageContent = document.createElement("div");
+            messageContent.classList.add("tyn-qa-message", "tyn-text-block");
+            messageContent.textContent = message;
+
+            // Apply styling based on user or bot message
+            if (isUser) {
+                messageContent.style.marginBottom = "10px";
+                messageContent.style.marginTop = "8px";
+            } else {
+                messageContent.style.marginBottom = "5px";
+            }
+
+            chatMessage.appendChild(avatar);
+            chatMessage.appendChild(messageContent);
+
+            if (!isUser) {
+                const copyButton = document.createElement("button");
+                copyButton.classList.add("copy-button");
+                copyButton.textContent = "Copy";
+                copyButton.addEventListener("click", function () {
+                    // Copy the response content to the clipboard
+                    navigator.clipboard.writeText(message)
+                        .then(function () {
+                            console.log("Copied to clipboard: " + message);
+                        })
+                        .catch(function (error) {
+                            console.error("Failed to copy to clipboard: " + error);
+                        });
+                });
+                chatMessage.appendChild(copyButton);
+            }
+
+            if (isUser) {
+                const regenerateButton = document.createElement("button");
+                regenerateButton.classList.add("regenerate-button");
+                regenerateButton.textContent = "Regenerate";
+                regenerateButton.addEventListener("click", function () {
+                    if (!isRegenerating(id)) {
+                        input.classList.add("blinking");
+                        input.value = "wait..."; // Set the "wait..." text in the input field
+                        input.disabled = true; // Disable the input field during response generation
+                        regenerateResponse(id);
+                    }
+                });
+                chatMessage.appendChild(regenerateButton);
+            }
+
+            chatItem.appendChild(chatMessage);
+            chatBody.appendChild(chatItem);
+            chatBody.scrollTop = chatBody.scrollHeight; // Scroll to the bottom after adding the chat message
+        }
+
+        function regenerateResponse(id) {
+            const messageItem = document.querySelector(`[data-message-id="${id}"]`);
+            if (messageItem) {
+                const messageText = messageItem.querySelector(".tyn-qa-message").textContent;
+                const regenerateButton = messageItem.querySelector(".regenerate-button");
+                if (regenerateButton) {
+                    disableRegenerateButton(id); // Disable the regenerate button during regeneration
+                }
+                sendMessage(messageText, id);
+            }
+        }
+
+        function enableRegenerateButton(id) {
+            const messageItem = document.querySelector(`[data-message-id="${id}"]`);
+            if (messageItem) {
+                const regenerateButton = messageItem.querySelector(".regenerate-button");
+                if (regenerateButton) {
+                    regenerateButton.disabled = false; // Enable the regenerate button
+                }
+            }
+        }
+
+        function disableRegenerateButton(id) {
+            const messageItem = document.querySelector(`[data-message-id="${id}"]`);
+            if (messageItem) {
+                const regenerateButton = messageItem.querySelector(".regenerate-button");
+                if (regenerateButton) {
+                    regenerateButton.disabled = true; // Disable the regenerate button during regeneration
+                }
+            }
+        }
+
+        function isRegenerating(id) {
+            const messageItem = document.querySelector(`[data-message-id="${id}"]`);
+            if (messageItem) {
+                const regenerateButton = messageItem.querySelector(".regenerate-button");
+                if (regenerateButton) {
+                    return regenerateButton.disabled; // Check if the regenerate button is disabled
+                }
+            }
+            return false;
+        }
+
+        function scrollToBottom() {
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+    });
+
+</script>
+
+
+
 
 {% endblock %}
