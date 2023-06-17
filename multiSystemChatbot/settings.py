@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
+    "allauth.socialaccount.providers.google",
+    "allauth.socialaccount.providers.github",
     # local apps
     "accounts",
     "chatbots",
@@ -158,6 +160,7 @@ ACCOUNT_AUTHENTICATION_METHOD = "email"
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+SOCIALACCOUNT_QUERY_EMAIL = True
 
 
 # Email configuration
@@ -180,3 +183,19 @@ ACCOUNT_FORMS = {
 # custom adapter for the django allauth
 
 ACCOUNT_ADAPTER = "multiSystemChatbot.adapter.RestrictEmailAdapter"
+
+
+# Social Account authentication configurations
+
+# Google authentication
+SOCIALACCOUNT_PROVIDERS = {
+    "google": {
+        "SCOPE": [
+            "profile",
+            "email",
+        ],
+        "AUTH_PARAMS": {
+            "access_type": "online",
+        },
+    }
+}
