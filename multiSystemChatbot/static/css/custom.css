@@ -1,0 +1,58 @@
+.copy-button,
+.regenerate-button {
+    background-color: #fff;
+    /* Button background color */
+    color: #000;
+    /* Button text color */
+    border: 1px solid #000;
+    /* Button border */
+    border-radius: 4px;
+    /* Button border radius */
+    padding: 2px 8px;
+    /* Button padding */
+    font-size: 12px;
+    /* Button font size */
+    cursor: pointer;
+    /* Cursor style on hover */
+    transition: background-color 0.3s, color 0.3s;
+
+    width: 65px;
+
+    height: 45px;
+
+    margin-top: 4px;
+}
+
+.copy-button:hover,
+.regenerate-button:hover {
+    background-color: #000;
+    /* Button background color on hover */
+    color: #fff;
+    /* Button text color on hover */
+}
+
+@keyframes blinking {
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+.blinking {
+    animation: blinking 1s infinite;
+}
+
+.wait-text {
+    visibility: hidden;
+}
+
+.blinking .wait-text {
+    visibility: visible;
+}
